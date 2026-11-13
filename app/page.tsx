@@ -1,69 +1,65 @@
-import Image from "next/image";
+import { connection } from "next/server";
+import { Suspense } from "react";
+import { getPhotographers } from "./prisma-db";
+
+async function PhotographerList() {
+  await connection();
+
+  // Récupérer la liste des photographes
+  let photographers;
+
+  try {
+    photographers = await getPhotographers();
+  } catch (error) {
+    console.error("Erreur lors de la récupération des photographes :", error);
+    return (
+      <main>
+        <h1>FishEye</h1>
+        <p>Impossible de récupérer la liste des photographes.</p>
+      </main>
+    );
+  }
+
+  // Vérifier si la liste est vide
+  if (photographers.length === 0) {
+    return (
+      <main>
+        <h1>FishEye</h1>
+        <p>Aucun photographe n&apos;a été trouvé.</p>
+      </main>
+    );
+  }
+
+  // Afficher les photographes
+  return (
+    <main>
+      <h1>Liste des photographes</h1>
+
+      <ul>
+        {photographers.map((photographer) => (
+          <li key={photographer.id}>
+            <h2>{photographer.name}</h2>
+            <p>
+              {photographer.city}, {photographer.country}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Suspense
+      fallback={
+        <main>
+          <h1>FishEye</h1>
+          <p>Chargement des photographes...</p>
+        </main>
+      }
+    >
+      <PhotographerList />
+    </Suspense>
   );
 }
