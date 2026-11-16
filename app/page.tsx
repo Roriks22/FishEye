@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { Suspense } from "react";
+import Link from "next/link";
 import { getPhotographers } from "./prisma-db";
 
 async function PhotographerList() {
@@ -15,7 +16,7 @@ async function PhotographerList() {
     return (
       <main>
         <h1>FishEye</h1>
-        <p>Impossible de récupérer la liste des photographes.</p>
+        <p role="alert">Impossible de récupérer la liste des photographes.</p>
       </main>
     );
   }
@@ -33,18 +34,21 @@ async function PhotographerList() {
   // Afficher les photographes
   return (
     <main>
-      <h1>Liste des photographes</h1>
-
-      <ul>
+      <h1>Nos photographes</h1>
+      <section aria-label="Listes des photographes">
         {photographers.map((photographer) => (
-          <li key={photographer.id}>
-            <h2>{photographer.name}</h2>
+          <article key={photographer.id}>
+            <Link href={`/photographer/${photographer.id}`}>
+              <h2>{photographer.name}</h2>
+            </Link>
             <p>
               {photographer.city}, {photographer.country}
             </p>
-          </li>
+            <p>{photographer.tagline}</p>
+            <p>{photographer.price} € / jour</p>
+          </article>
         ))}
-      </ul>
+      </section>
     </main>
   );
 }
