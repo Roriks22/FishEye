@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { likeMedia } from "./actions";
 
 type Media = {
@@ -23,6 +23,9 @@ export default function MediaGallery({
   photographerId,
 }: MediaGalleryProps) {
   const [sortBy, setSortBy] = useState("likes");
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(
+    null,
+  );
 
   // Créer une copie du tableau avant de le trier
   const sortedMedia = [...media].sort((a, b) => {
@@ -37,6 +40,35 @@ export default function MediaGallery({
     }
     return 0;
   });
+
+  //   Fermeture et navigation dans la lightbox avec le clavier
+  useEffect(() => {
+    if (selectedMediaIndex === null) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedMediaIndex(null);
+      }
+      if (event.key === "ArrowRight") {
+        setSelectedMediaIndex((current) =>
+          current === null ? null : (current + 1) % sortedMedia.length,
+        );
+      }
+      if (event.key === "ArrowLeft") {
+        setSelectedMediaIndex((current) =>
+          current === null ? null : (current - 1) % sortedMedia.length,
+        );
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedMediaIndex, sortedMedia.length]);
+
+  const selectedMedia =
+    selectedMediaIndex !== null ? sortedMedia[selectedMediaIndex] : null;
 
   return (
     <section aria-label="Galerie de médias">
@@ -53,28 +85,42 @@ export default function MediaGallery({
         </select>
       </div>
       <ul>
-        {sortedMedia.map((item) => (
+        {sortedMedia.map((item, index) => (
           <li key={item.id}>
             <h3>{item.title}</h3>
             {item.image && (
-              <Image
-                src={`/assets/${item.image}`}
-                alt={item.title}
-                width={500}
-                height={500}
-              />
+              <button
+                type="button"
+                onClick={() => setSelectedMediaIndex(index)}
+                aria-label={`Agrandir ${item.title}`}
+              >
+                <Image
+                  src={`/assets/${item.image}`}
+                  alt={item.title}
+                  width={500}
+                  height={500}
+                />
+              </button>
             )}
             {item.video && (
-              <video controls>
-                <source src={`/assets/${item.video}`} type="video/mp4" />
-                Votre navigateur ne prend pas en charge la vidéo.
-              </video>
+              <>
+                <video controls>
+                  <source src={`/assets/${item.video}`} type="video/mp4" />
+                  Votre navigateur ne prend pas en charge la vidéo.
+                </video>
+                <button
+                  type="button"
+                  onClick={() => setSelectedMediaIndex(index)}
+                >
+                  Agrandir la vidéo
+                </button>
+              </>
             )}
             <p>
               {item.likes}{" "}
               <button
                 type="button"
-                aria-label={`Ajouter un like à {item.title}`}
+                aria-label={`Ajouter un like à ${item.title}`}
                 onClick={() => likeMedia(item.id, photographerId)}
               >
                 ♡
@@ -83,6 +129,68 @@ export default function MediaGallery({
           </li>
         ))}
       </ul>
+      {/* Lightbox */}
+      {selectedMedia && (
+        <div className="lightbox" onClick={() => setSelectedMediaIndex(null)}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Visualisation de ${selectedMedia.title}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedMediaIndex(null)}
+              aria-label="Fermer la galerie"
+            >
+              x
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (selectedMediaIndex === null) return;
+                setSelectedMediaIndex(
+                  (selectedMediaIndex - 1 + sortedMedia.length) %
+                    sortedMedia.length,
+                );
+              }}
+              aria-label="Média précédent"
+            >
+              ‹
+            </button>
+            {selectedMedia.image && (
+              <Image
+                src={`/assets/${selectedMedia.image}`}
+                alt={selectedMedia.title}
+                width={1200}
+                height={800}
+              />
+            )}
+            {selectedMedia.video && (
+              <video controls autoPlay>
+                <source
+                  src={`/assets/${selectedMedia.video}`}
+                  type="video/mp4"
+                />
+                Votre navigateur ne prend pas en charge la vidéo.
+              </video>
+            )}
+            <h2>{selectedMedia.title}</h2>
+            <button
+              type="button"
+              onClick={() => {
+                if (selectedMediaIndex === null) return;
+                setSelectedMediaIndex(
+                  (selectedMediaIndex + 1) % sortedMedia.length,
+                );
+              }}
+              aria-label="Média suivant"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

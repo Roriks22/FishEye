@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { getPhotographerById, getMediaByPhotographerId } from "../../prisma-db";
 import MediaGallery from "./MediaGallery";
+import ContactForm from "./ContactForm";
 
 type PhotographerPageProps = {
   params: Promise<{ id: string }>;
@@ -45,6 +46,7 @@ async function PhotographerContent({ id }: { id: number }) {
         <p>{photographer.tagline}</p>
         <p>{photographer.price} € / jour</p>
       </header>
+      <ContactForm photographerName={photographer.name} />
       <MediaGallery media={media} photographerId={id} />
     </main>
   );
