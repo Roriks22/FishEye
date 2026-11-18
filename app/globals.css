@@ -1,62 +1,596 @@
-@import "tailwindcss";
-
+/* --- Variables globales et typographie --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: #901c1c; /* Le rouge brique FishEye */
+  --color-titre: #d3573c; /* Le bleu/turquoise du logo */
+  --color-text: #000000;
+  --color-secondary-text: #757575;
+  --color-price: #525252;
+  --font-family: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-photograph-header: #fafafa;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
+/* --- Conteneur global et En-tête --- */
+.fisheye-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.fisheye-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* --- Grille des photographes --- */
+.photographers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px 40px;
+}
+
+/* --- Carte photographe --- */
+.photographer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.photographer-profile-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.photographer-profile-link:hover {
+  transform: scale(1.03);
+}
+
+/* --- Avatar circulaire --- */
+.avatar-wrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
+.photographer-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Informations textuelles --- */
+.photographer-name {
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--color-titre);
+  margin: 0 0 8px 0;
+}
+
+.photographer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.location {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.tagline {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.price {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--color-secondary-text);
+  margin: 0;
+}
+
+/* --- Responsive pour tablettes et mobiles --- */
+@media (max-width: 1024px) {
+  .photographers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .fisheye-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .photographers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- SECTION GALERIE DE MÉDIAS --- */
+.gallery-section {
+  max-width: 1240px;
+  margin: 40px auto;
+  padding: 0 40px;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* --- BARRE DE TRI --- */
+.sort-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 30px;
+  gap: 25px;
+  margin-bottom: 50px;
 }
 
-.lightbox > div {
+.sort-label {
+  font-weight: 700;
+  font-size: 18px;
+  color: #000000;
+}
+
+.sort-select {
+  background-color: #901c1c;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.sort-select:hover {
+  background-color: #db8876;
+}
+
+/* --- GRILLE DES MÉDIAS (3 colonnes) --- */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px 95px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.media-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- MINIATURES (Images et Vidéos) --- */
+.media-thumbnail-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.media-img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.media-img:hover {
+  transform: scale(1.02);
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.media-video {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.expand-video-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+.expand-video-btn:hover {
+  transform: scale(1.02);
+}
+
+/* --- PIED DE CARTE (Titre et Likes) --- */
+.media-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 10px;
+}
+
+.media-title {
+  color: #901c1c;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.media-likes-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #901c1c;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #901c1c;
+  transition: transform 0.1s ease;
+}
+
+.like-btn:active {
+  transform: scale(1.2);
+}
+
+/* --- ENCART FIXE (Bas de page : Likes & Tarif) --- */
+.photographer-fixed-info {
+  position: fixed;
+  bottom: 0;
+  right: 40px;
+  background-color: #db8876;
+  color: #000000;
+  padding: 18px 30px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  display: flex;
+  gap: 40px;
+  font-size: 24px;
+  font-weight: 500;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.total-likes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- LIGHTBOX PLEIN ÉCRAN --- */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.lightbox-content {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  padding: 20px;
+}
+
+.lightbox-media-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  padding: 0 10px;
+}
+
+.lightbox-img,
+.lightbox-video {
   width: 100%;
-  max-width: 1200px;
-  max-height: 90vh;
-}
-.lightbox img,
-.lightbox video {
-  max-width: 75%;
-  max-height: 80vh;
-  width: auto;
-  height: auto;
+  height: 650px;
   object-fit: contain;
+  border-radius: 5px;
 }
-.lightbox button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-size: 32px;
+
+.lightbox-title {
   color: #901c1c;
+  font-size: 24px;
+  font-weight: 400;
+  margin-top: 10px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 45px;
+  color: #901c1c;
+  cursor: pointer;
+}
+
+.lightbox-prev,
+.lightbox-next {
+  background: none;
+  border: none;
+  font-size: 70px;
+  color: #901c1c;
+  cursor: pointer;
+  padding: 0 10px;
+  transition: opacity 0.2s;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  opacity: 0.7;
+}
+
+/* --- RESPONSIVE TABLETTES ET MOBILES --- */
+@media (max-width: 1024px) {
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-section {
+    padding: 0 20px;
+  }
+
+  .lightbox-content {
+    padding: 10px;
+  }
+
+  .lightbox-media-container {
+    padding: 0 10px;
+  }
+}
+
+/* --- EN-TÊTE DU PHOTOGRAPHE (Bandeau gris) --- */
+.photographer-header-banner {
+  background-color: var(--font-photograph-header);
+  padding: 40px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.photographer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.photographer-profile-name {
+  font-size: 64px;
+  font-weight: 400;
+  color: var(--color-titre);
+  margin: 0;
+}
+
+.photographer-location {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.photographer-tagline {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-secondary-text);
+  margin: 0;
+  padding-top: 0.5rem;
+}
+
+/* Bouton Contactez-moi */
+.contact-btn-container .contact-trigger-btn {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 25px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Avatar circulaire du profil */
+.photographer-avatar-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.photographer-profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- MODALE DE CONTACT --- */
+.contact-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(196, 196, 196, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.contact-modal-content {
+  background-color: #db8876;
+  padding: 35px 40px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 670px;
+  box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.contact-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.contact-modal-content h1 {
+  color: #000000;
+  font-size: 55px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.contact-close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 45px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* --- FORMULAIRE --- */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  color: #312e2e;
+  font-size: 24px;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  font-family: inherit;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-field input {
+  height: 68px;
+}
+
+.form-field textarea {
+  resize: vertical;
+  height: 170px;
+}
+
+.contact-submit-btn {
+  background-color: #901c1c;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+  .contact-modal-content {
+    padding: 20px;
+    margin: 15px;
+    max-width: 100%;
+  }
+
+  .contact-modal-content h2 {
+    font-size: 32px;
+  }
+
+  .form-field input {
+    height: 50px;
+  }
+
+  .form-field textarea {
+    height: 120px;
+  }
 }

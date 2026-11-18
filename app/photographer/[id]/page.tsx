@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getPhotographerById, getMediaByPhotographerId } from "../../prisma-db";
 import MediaGallery from "./MediaGallery";
 import ContactForm from "./ContactForm";
+import Link from "next/link";
+import Image from "next/image";
 
 type PhotographerPageProps = {
   params: Promise<{ id: string }>;
@@ -37,17 +39,64 @@ async function PhotographerContent({ id }: { id: number }) {
   }
 
   return (
-    <main>
-      <header>
-        <h1>{photographer.name}</h1>
-        <p>
-          {photographer.city}, {photographer.country}
-        </p>
-        <p>{photographer.tagline}</p>
-        <p>{photographer.price} € / jour</p>
+    <main className="fisheye-container">
+      {/* En-tête du photographe fidèle au Figma */}
+      <header className="fisheye-header">
+        <Link href="/">
+          <Image
+            src={`/assets/FishEye.png`}
+            alt="FishEye"
+            width={200}
+            height={50}
+          />
+        </Link>
       </header>
-      <ContactForm photographerName={photographer.name} />
+      <section className="photographer-header-banner">
+        <div className="photographer-meta">
+          <h1 className="photographer-profile-name">{photographer.name}</h1>
+          <p className="photographer-location">
+            {photographer.city}, {photographer.country}
+          </p>
+          <p className="photographer-tagline">{photographer.tagline}</p>
+        </div>
+
+        <div className="contact-btn-container">
+          <ContactForm photographerName={photographer.name} />
+        </div>
+
+        <div className="photographer-avatar-container">
+          {photographer.portrait && (
+            <Image
+              src={`/assets/${photographer.portrait}`}
+              alt={photographer.name}
+              width={200}
+              height={200}
+              className="photographer-profile-avatar"
+            />
+          )}
+        </div>
+      </section>
+
+      {/* Galerie de médias */}
       <MediaGallery media={media} photographerId={id} />
+
+      {/* Encart fixe bas de page (Likes totaux et Tarif) */}
+      <aside
+        className="photographer-fixed-info"
+        aria-label="Statistiques du photographe"
+      >
+        <span className="total-likes">
+          {media.reduce((acc, curr) => acc + curr.likes, 0)}{" "}
+          <Image
+            className="favorite-noir"
+            src={`/assets/favorite-noir.png`}
+            alt="likes"
+            width={21}
+            height={24}
+          />
+        </span>
+        <span className="daily-price">{photographer.price}€ / jour</span>
+      </aside>
     </main>
   );
 }

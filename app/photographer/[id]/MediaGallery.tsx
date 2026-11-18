@@ -41,7 +41,7 @@ export default function MediaGallery({
     return 0;
   });
 
-  //   Fermeture et navigation dans la lightbox avec le clavier
+  // Fermeture et navigation dans la lightbox avec le clavier
   useEffect(() => {
     if (selectedMediaIndex === null) return;
 
@@ -71,68 +71,93 @@ export default function MediaGallery({
     selectedMediaIndex !== null ? sortedMedia[selectedMediaIndex] : null;
 
   return (
-    <section aria-label="Galerie de médias">
-      <div>
-        <label htmlFor="media-sort">Trier par :</label>
-        <select
-          id="media-sort"
-          value={sortBy}
-          onChange={(event) => setSortBy(event.target.value)}
-        >
-          <option value="likes">Popularité</option>
-          <option value="date">Date</option>
-          <option value="title">Titre</option>
-        </select>
+    <section className="gallery-section" aria-label="Galerie de médias">
+      {/* Barre de tri */}
+      <div className="sort-container">
+        <label htmlFor="media-sort" className="sort-label">
+          Trier par
+        </label>
+        <div className="select-wrapper">
+          <select
+            id="media-sort"
+            className="sort-select"
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
+          >
+            <option value="likes">Popularité</option>
+            <option value="date">Date</option>
+            <option value="title">Titre</option>
+          </select>
+        </div>
       </div>
-      <ul>
+
+      {/* Grille des médias */}
+      <ul className="media-grid">
         {sortedMedia.map((item, index) => (
-          <li key={item.id}>
-            <h3>{item.title}</h3>
+          <li key={item.id} className="media-card">
             {item.image && (
               <button
                 type="button"
+                className="media-thumbnail-btn"
                 onClick={() => setSelectedMediaIndex(index)}
                 aria-label={`Agrandir ${item.title}`}
               >
                 <Image
                   src={`/assets/${item.image}`}
                   alt={item.title}
-                  width={500}
-                  height={500}
+                  width={350}
+                  height={350}
+                  className="media-img"
                 />
               </button>
             )}
             {item.video && (
-              <>
-                <video controls>
-                  <source src={`/assets/${item.video}`} type="video/mp4" />
-                  Votre navigateur ne prend pas en charge la vidéo.
-                </video>
+              <div className="video-wrapper">
                 <button
                   type="button"
+                  className="expand-video-btn"
                   onClick={() => setSelectedMediaIndex(index)}
+                  aria-label={`Agrandir la vidéo ${item.title}`}
                 >
-                  Agrandir la vidéo
+                  <video controls className="media-video">
+                    <source src={`/assets/${item.video}`} type="video/mp4" />
+                    Votre navigateur ne prend pas en charge la vidéo.
+                  </video>
                 </button>
-              </>
+              </div>
             )}
-            <p>
-              {item.likes}{" "}
-              <button
-                type="button"
-                aria-label={`Ajouter un like à ${item.title}`}
-                onClick={() => likeMedia(item.id, photographerId)}
-              >
-                ♡
-              </button>
-            </p>
+
+            <div className="media-footer">
+              <h3 className="media-title">{item.title}</h3>
+              <div className="media-likes-container">
+                <span className="likes-count">{item.likes}</span>
+                <button
+                  type="button"
+                  className="like-btn"
+                  aria-label={`Ajouter un like à ${item.title}`}
+                  onClick={() => likeMedia(item.id, photographerId)}
+                >
+                  <Image
+                    src={`/assets/favorite.png`}
+                    alt="likes"
+                    width={21}
+                    height={24}
+                  />
+                </button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
+
       {/* Lightbox */}
       {selectedMedia && (
-        <div className="lightbox" onClick={() => setSelectedMediaIndex(null)}>
+        <div
+          className="lightbox-overlay"
+          onClick={() => setSelectedMediaIndex(null)}
+        >
           <div
+            className="lightbox-content"
             role="dialog"
             aria-modal="true"
             aria-label={`Visualisation de ${selectedMedia.title}`}
@@ -140,13 +165,16 @@ export default function MediaGallery({
           >
             <button
               type="button"
+              className="lightbox-close"
               onClick={() => setSelectedMediaIndex(null)}
               aria-label="Fermer la galerie"
             >
-              x
+              ✕
             </button>
+
             <button
               type="button"
+              className="lightbox-prev"
               onClick={() => {
                 if (selectedMediaIndex === null) return;
                 setSelectedMediaIndex(
@@ -158,26 +186,32 @@ export default function MediaGallery({
             >
               ‹
             </button>
-            {selectedMedia.image && (
-              <Image
-                src={`/assets/${selectedMedia.image}`}
-                alt={selectedMedia.title}
-                width={1200}
-                height={800}
-              />
-            )}
-            {selectedMedia.video && (
-              <video controls autoPlay>
-                <source
-                  src={`/assets/${selectedMedia.video}`}
-                  type="video/mp4"
+
+            <div className="lightbox-media-container">
+              {selectedMedia.image && (
+                <Image
+                  src={`/assets/${selectedMedia.image}`}
+                  alt={selectedMedia.title}
+                  width={1050}
+                  height={900}
+                  className="lightbox-img"
                 />
-                Votre navigateur ne prend pas en charge la vidéo.
-              </video>
-            )}
-            <h2>{selectedMedia.title}</h2>
+              )}
+              {selectedMedia.video && (
+                <video controls autoPlay className="lightbox-video">
+                  <source
+                    src={`/assets/${selectedMedia.video}`}
+                    type="video/mp4"
+                  />
+                  Votre navigateur ne prend pas en charge la vidéo.
+                </video>
+              )}
+              <h2 className="lightbox-title">{selectedMedia.title}</h2>
+            </div>
+
             <button
               type="button"
+              className="lightbox-next"
               onClick={() => {
                 if (selectedMediaIndex === null) return;
                 setSelectedMediaIndex(
