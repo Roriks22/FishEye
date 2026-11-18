@@ -150,6 +150,8 @@ body {
   align-items: center;
   gap: 25px;
   margin-bottom: 50px;
+  position: relative;
+  z-index: 10;
 }
 
 .sort-label {
@@ -158,10 +160,18 @@ body {
   color: #000000;
 }
 
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .sort-select {
+  appearance: none;
+  -webkit-appearance: none; /* Chrome, Safari, Edge */
+  -moz-appearance: none; /* Firefox */
   background-color: #901c1c;
   color: white;
-  padding: 15px 25px;
+  padding: 15px 45px 15px 20px;
   border: none;
   font-size: 18px;
   font-weight: 700;
@@ -169,11 +179,25 @@ body {
   cursor: pointer;
   outline: none;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
 }
 
-.sort-select:hover {
-  background-color: #db8876;
+.sort-select option {
+  background-color: #901c1c !important;
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 18px;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  pointer-events: none;
 }
 
 /* --- GRILLE DES MÉDIAS (3 colonnes) --- */

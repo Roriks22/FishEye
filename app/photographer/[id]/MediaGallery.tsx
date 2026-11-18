@@ -88,6 +88,7 @@ export default function MediaGallery({
             <option value="date">Date</option>
             <option value="title">Titre</option>
           </select>
+          <span className="select-arrow"></span>
         </div>
       </div>
 
