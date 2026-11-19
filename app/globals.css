@@ -163,41 +163,64 @@ body {
 .select-wrapper {
   position: relative;
   display: inline-block;
+  width: 170px;
 }
 
-.sort-select {
-  appearance: none;
-  -webkit-appearance: none; /* Chrome, Safari, Edge */
-  -moz-appearance: none; /* Firefox */
+.sort-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: #901c1c;
-  color: white;
-  padding: 15px 45px 15px 20px;
+  color: #ffffff;
+  padding: 16px 20px;
   border: none;
+  border-radius: 5px;
   font-size: 18px;
   font-weight: 700;
-  border-radius: 4px;
+  font-family: var(--font-family);
   cursor: pointer;
-  outline: none;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.12);
 }
 
-.sort-select option {
-  background-color: #901c1c !important;
-  color: #ffffff;
-  padding: 12px 20px;
-  font-size: 18px;
+.sort-button.open {
+  border-radius: 5px 5px 0 0;
 }
 
 .select-arrow {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
   width: 8px;
   height: 8px;
   border-right: 2px solid #ffffff;
   border-bottom: 2px solid #ffffff;
-  pointer-events: none;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.select-arrow.open {
+  margin-top: 0.5rem;
+  transform: rotate(-135deg);
+}
+.sort-options-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: #901c1c;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+  z-index: 30;
+}
+
+.sort-option-item {
+  padding: 14px 20px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border-top: 1px solid #ffffff;
 }
 
 /* --- GRILLE DES MÉDIAS (3 colonnes) --- */
@@ -242,29 +265,37 @@ body {
 .video-wrapper {
   position: relative;
   width: 100%;
-}
-
-.media-video {
-  width: 100%;
-  height: 350px;
-  object-fit: cover;
   border-radius: 5px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.expand-video-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
   overflow: hidden;
-  border-radius: 5px;
-  width: 100%;
+  cursor: pointer;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease;
 }
-.expand-video-btn:hover {
+
+.video-wrapper:hover {
   transform: scale(1.02);
+}
+
+.media-video {
+  display: block;
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.expand-video-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #901c1c;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 /* --- PIED DE CARTE (Titre et Likes) --- */

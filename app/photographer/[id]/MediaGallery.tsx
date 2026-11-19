@@ -18,11 +18,18 @@ type MediaGalleryProps = {
   photographerId: number;
 };
 
+const SORT_OPTIONS = [
+  { value: "likes", label: "Popularité" },
+  { value: "date", label: "Date" },
+  { value: "title", label: "Titre" },
+];
+
 export default function MediaGallery({
   media,
   photographerId,
 }: MediaGalleryProps) {
   const [sortBy, setSortBy] = useState("likes");
+  const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState<number | null>(
     null,
   );
@@ -41,6 +48,22 @@ export default function MediaGallery({
     return 0;
   });
 
+  // Fermeture du menu de tri avec Échap
+  useEffect(() => {
+    if (!isSortOpen) return;
+
+    function handleSortKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsSortOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleSortKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleSortKeyDown);
+    };
+  }, [isSortOpen]);
+
   // Fermeture et navigation dans la lightbox avec le clavier
   useEffect(() => {
     if (selectedMediaIndex === null) return;
@@ -56,7 +79,9 @@ export default function MediaGallery({
       }
       if (event.key === "ArrowLeft") {
         setSelectedMediaIndex((current) =>
-          current === null ? null : (current - 1) % sortedMedia.length,
+          current === null
+            ? null
+            : (current - 1 + sortedMedia.length) % sortedMedia.length,
         );
       }
     }
@@ -70,25 +95,60 @@ export default function MediaGallery({
   const selectedMedia =
     selectedMediaIndex !== null ? sortedMedia[selectedMediaIndex] : null;
 
+  const currentSortLabel =
+    SORT_OPTIONS.find((option) => option.value === sortBy)?.label ??
+    "Popularité";
+
+  const dropdownOptions = SORT_OPTIONS.filter(
+    (option) => option.value !== sortBy,
+  );
+
   return (
     <section className="gallery-section" aria-label="Galerie de médias">
-      {/* Barre de tri */}
+      {/* Barre de tri (bouton + listbox ARIA fidèle à la maquette) */}
       <div className="sort-container">
-        <label htmlFor="media-sort" className="sort-label">
+        <span id="media-sort-label" className="sort-label">
           Trier par
-        </label>
+        </span>
         <div className="select-wrapper">
-          <select
+          <button
+            type="button"
             id="media-sort"
-            className="sort-select"
-            value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
+            className={`sort-button ${isSortOpen ? "open" : ""}`}
+            aria-haspopup="listbox"
+            aria-expanded={isSortOpen}
+            aria-labelledby="media-sort-label media-sort"
+            onClick={() => setIsSortOpen((open) => !open)}
           >
-            <option value="likes">Popularité</option>
-            <option value="date">Date</option>
-            <option value="title">Titre</option>
-          </select>
-          <span className="select-arrow"></span>
+            <span>{currentSortLabel}</span>
+            <span
+              className={`select-arrow ${isSortOpen ? "open" : ""}`}
+              aria-hidden="true"
+            />
+          </button>
+
+          {isSortOpen && (
+            <ul
+              className="sort-options-list"
+              role="listbox"
+              aria-labelledby="media-sort-label"
+            >
+              {dropdownOptions.map((option) => (
+                <li
+                  key={option.value}
+                  role="option"
+                  aria-selected={false}
+                  className="sort-option-item"
+                  onClick={() => {
+                    setSortBy(option.value);
+                    setIsSortOpen(false);
+                  }}
+                >
+                  {option.label}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
@@ -101,7 +161,6 @@ export default function MediaGallery({
                 type="button"
                 className="media-thumbnail-btn"
                 onClick={() => setSelectedMediaIndex(index)}
-                aria-label={`Agrandir ${item.title}`}
               >
                 <Image
                   src={`/assets/${item.image}`}
@@ -112,19 +171,26 @@ export default function MediaGallery({
                 />
               </button>
             )}
+
             {item.video && (
-              <div className="video-wrapper">
-                <button
-                  type="button"
-                  className="expand-video-btn"
-                  onClick={() => setSelectedMediaIndex(index)}
-                  aria-label={`Agrandir la vidéo ${item.title}`}
-                >
-                  <video controls className="media-video">
-                    <source src={`/assets/${item.video}`} type="video/mp4" />
-                    Votre navigateur ne prend pas en charge la vidéo.
-                  </video>
-                </button>
+              <div
+                className="video-wrapper"
+                role="button"
+                tabIndex={0}
+                aria-label={`Ouvrir ${item.title} dans la lightbox`}
+                onClick={() => setSelectedMediaIndex(index)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setSelectedMediaIndex(index);
+                  }
+                }}
+              >
+                <video className="media-video" muted preload="metadata">
+                  <source src={`/assets/${item.video}`} type="video/mp4" />
+                  Votre navigateur ne prend pas en charge la vidéo.
+                </video>
+                <span className="expand-video-btn" aria-hidden="true"></span>
               </div>
             )}
 
@@ -161,7 +227,7 @@ export default function MediaGallery({
             className="lightbox-content"
             role="dialog"
             aria-modal="true"
-            aria-label={`Visualisation de ${selectedMedia.title}`}
+            aria-label="image closeup view"
             onClick={(event) => event.stopPropagation()}
           >
             <button

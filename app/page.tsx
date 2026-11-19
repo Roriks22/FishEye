@@ -29,7 +29,12 @@ async function PhotographerList() {
       <main className="container">
         <header className="header">
           <span className="logo">
-            Fish<span className="logo-at">@</span>ye
+            <Image
+              src={`/assets/FishEye.png`}
+              alt="Fisheye Home page"
+              width={200}
+              height={50}
+            />
           </span>
         </header>
         <p role="alert">Impossible de récupérer la liste des photographes.</p>
@@ -42,7 +47,12 @@ async function PhotographerList() {
       <main className="container">
         <header className="header">
           <span className="logo">
-            Fish<span className="logo-at">@</span>ye
+            <Image
+              src={`/assets/FishEye.png`}
+              alt="Fisheye Home page"
+              width={200}
+              height={50}
+            />
           </span>
         </header>
         <p>Aucun photographe n&apos;a été trouvé.</p>
@@ -57,7 +67,7 @@ async function PhotographerList() {
         <Link href="/">
           <Image
             src={`/assets/FishEye.png`}
-            alt="FishEye"
+            alt="Fisheye Home page"
             width={200}
             height={50}
           />
@@ -82,7 +92,7 @@ async function PhotographerList() {
                   {/* Assurez-vous d'avoir un champ portrait dans votre base de données/prisma */}
                   <Image
                     src={`/assets/${photographer.portrait}`}
-                    alt={photographer.name}
+                    alt=""
                     width={200}
                     height={200}
                     className="photographer-avatar"
@@ -110,9 +120,14 @@ export default function Home() {
     <Suspense
       fallback={
         <main className="fisheye-container">
-          <h1 className="logo">
-            Fish<span className="logo-at">@</span>ye
-          </h1>
+          <span className="logo">
+            <Image
+              src={`/assets/FishEye.png`}
+              alt="Fisheye Home page"
+              width={200}
+              height={50}
+            />
+          </span>
           <p>Chargement des photographes...</p>
         </main>
       }

@@ -45,7 +45,7 @@ async function PhotographerContent({ id }: { id: number }) {
         <Link href="/">
           <Image
             src={`/assets/FishEye.png`}
-            alt="FishEye"
+            alt="Fisheye Home page"
             width={200}
             height={50}
           />
