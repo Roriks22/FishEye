@@ -1,0 +1,99 @@
+.card {
+  display: flex;
+  flex-direction: column;
+
+  .thumbnailButton {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+
+    .image {
+      width: 100%;
+      height: 350px;
+      border-radius: 5px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+
+  .videoWrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    .video {
+      display: block;
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+    }
+
+    .expandVideoButton {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .title {
+      margin: 0;
+      color: var(--color-primary);
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .likesContainer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--color-primary);
+      font-size: 20px;
+      font-weight: 500;
+
+      .likeButton {
+        border: none;
+        background: none;
+        color: var(--color-primary);
+        font-size: 20px;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+
+        &:active {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+}

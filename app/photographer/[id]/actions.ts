@@ -1,6 +1,6 @@
 "use server";
 
-import { addLikeToMedia } from "@/app/prisma-db";
+import { addLikeToMedia } from "@/infrastructure/prisma/prisma-db";
 import { revalidatePath } from "next/cache";
 
 export async function likeMedia(mediaId: number, photographerId: number) {

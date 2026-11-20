@@ -1,0 +1,78 @@
+.sortContainer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 50px;
+
+  .sortLabel {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .selectWrapper {
+    position: relative;
+    display: inline-block;
+    width: 170px;
+
+    .sortButton {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      font-family: var(--font-family);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgb(0 0 0 / 12%);
+
+      &.sortButtonOpen {
+        border-radius: 5px 5px 0 0;
+      }
+
+      .arrow {
+        width: 8px;
+        height: 8px;
+        transform: rotate(45deg);
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+        transition: transform 0.2s ease;
+
+        &.arrowOpen {
+          margin-top: 0.5rem;
+          transform: rotate(-135deg);
+        }
+      }
+    }
+
+    .optionsList {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 30;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 0 5px 5px;
+      background-color: var(--color-primary);
+      list-style: none;
+      box-shadow: 0 6px 10px rgb(0 0 0 / 15%);
+
+      .option {
+        padding: 14px 20px;
+        border-top: 1px solid #ffffff;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+    }
+  }
+}

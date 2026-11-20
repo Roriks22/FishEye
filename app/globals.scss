@@ -1,0 +1,38 @@
+@use "../styles/breakpoints" as breakpoints;
+
+:root {
+  --color-primary: #901c1c;
+  --color-titre: #d3573c;
+  --color-text: #000000;
+  --color-secondary-text: #757575;
+  --color-price: #525252;
+  --font-family: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-photograph-header: #fafafa;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.siteHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 60px;
+
+  @media (max-width: breakpoints.$mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}

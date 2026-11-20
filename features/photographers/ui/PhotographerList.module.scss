@@ -1,0 +1,22 @@
+@use "../../../styles/breakpoints" as breakpoints;
+
+.pageTitle {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px 40px;
+
+  @media (max-width: breakpoints.$tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: breakpoints.$mobile) {
+    grid-template-columns: 1fr;
+  }
+}
